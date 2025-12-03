@@ -1,10 +1,5 @@
-terraform {
-  required_version = ">= 0.15"
+# Updated versions.tf
 
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 4.24.0"
-    }
-  }
-}
+# Update AWS provider version constraint from ">= 4.24.0" to ">= 6.0.0".
+
+# Your existing terraform code goes here, with the version updated.
