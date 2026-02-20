@@ -1,37 +1,63 @@
 variable "detector_features" {
-  description = "Provides a resource to manage a single Amazon GuardDuty detector feature."
-  type = list(object({
-    name   = string
-    status = string
-    region = optional(string)
-    additional_configuration = optional(object({
-      name   = string
-      status = string
-    }))
-  }))
-  default = []
+  description = "Manages Amazon GuardDuty detector features. To disable a feature after it has been enabled, be sure to *apply* the feature with 'status' set to 'DISABLED' and 'exclude' set to 'false'."
+  type = object({
+    S3_DATA_EVENTS = optional(object({
+      exclude = optional(bool, false)
+      status  = optional(string, "ENABLED")
+      region  = optional(string)
+    }), {})
+    EBS_MALWARE_PROTECTION = optional(object({
+      exclude = optional(bool, false)
+      status  = optional(string, "ENABLED")
+      region  = optional(string)
+    }), {})
+    EKS_AUDIT_LOGS = optional(object({
+      exclude = optional(bool, false)
+      status  = optional(string, "ENABLED")
+      region  = optional(string)
+    }), {})
+    LAMBDA_NETWORK_LOGS = optional(object({
+      exclude = optional(bool, false)
+      status  = optional(string, "ENABLED")
+      region  = optional(string)
+    }), {})
+    RDS_LOGIN_EVENTS = optional(object({
+      exclude = optional(bool, false)
+      status  = optional(string, "ENABLED")
+      region  = optional(string)
+    }), {})
+    EKS_RUNTIME_MONITORING = optional(object({
+      exclude = optional(bool, true)
+      status  = optional(string, "DISABLED")
+      region  = optional(string)
+      additional_configuration = optional(object({
+        EKS_ADDON_MANAGEMENT = optional(object({
+          status = optional(string, "DISABLED")
+        }), {})
+      }), {})
+    }), {})
+    RUNTIME_MONITORING = optional(object({
+      exclude = optional(bool, true)
+      status  = optional(string, "DISABLED")
+      region  = optional(string)
+      additional_configuration = optional(object({
+        EC2_AGENT_MANAGEMENT = optional(object({
+          status = optional(string, "DISABLED")
+        }), {})
+        ECS_FARGATE_AGENT_MANAGEMENT = optional(object({
+          status = optional(string, "DISABLED")
+        }), {})
+        EKS_ADDON_MANAGEMENT = optional(object({
+          status = optional(string, "DISABLED")
+        }), {})
+      }), {})
+    }), {})
+  })
+  default = {}
 }
 
 variable "enable" {
-  description = "(Optional) Enable GuardDuty monitoring and feedback reporting. Setting to false is equivalent to 'suspending'GuardDuty. Defaults to true."
-  type        = bool
-  default     = true
-}
-
-variable "enable_s3_protection" {
-  description = "(Required) If true, enables S3 Protection. Defaults to true."
-  type        = bool
-  default     = true
-}
-
-variable "enable_kubernetes_protection" {
-  description = "(Required) If true, enables S3 Protection. Defaults to true."
-  type        = bool
-  default     = true
-}
-
-variable "enable_malware_protection" {
-  description = "(Required) If true, enables S3 Protection. Defaults to true."
+  description = "(Optional) Enable GuardDuty monitoring and feedback reporting. Setting to false is equivalent to 'suspending' GuardDuty. Defaults to true."
   type        = bool
   default     = true
 }

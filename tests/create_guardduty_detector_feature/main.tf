@@ -7,17 +7,24 @@ module "detector_features" {
 
   enable = true
 
-  detector_features = [
-    {
-      name   = "EKS_RUNTIME_MONITORING"
-      status = "ENABLED"
-      region = data.aws_region.current.region
+  detector_features = {
+    RUNTIME_MONITORING = {
+      exclude = false
+      status  = "ENABLED"
+      region  = data.aws_region.current.region
       additional_configuration = {
-        name   = "EKS_ADDON_MANAGEMENT"
-        status = "ENABLED"
+        EKS_ADDON_MANAGEMENT = {
+          status = "ENABLED"
+        }
+        ECS_FARGATE_AGENT_MANAGEMENT = {
+          status = "ENABLED"
+        }
+        EC2_AGENT_MANAGEMENT = {
+          status = "ENABLED"
+        }
       }
     }
-  ]
+  }
 }
 
 data "aws_region" "current" {}

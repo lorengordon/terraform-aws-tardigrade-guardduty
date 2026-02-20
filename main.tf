@@ -15,30 +15,6 @@
 resource "aws_guardduty_detector" "this" {
   enable                       = var.enable
   finding_publishing_frequency = var.finding_publishing_frequency
-
-  datasources {
-    s3_logs {
-      enable = var.enable_s3_protection
-    }
-
-    kubernetes {
-      audit_logs {
-        enable = var.enable_kubernetes_protection
-      }
-    }
-
-    dynamic "malware_protection" {
-      for_each = var.enable_malware_protection != null ? ["one"] : []
-
-      content {
-        scan_ec2_instance_with_findings {
-          ebs_volumes {
-            enable = var.enable_malware_protection
-          }
-        }
-      }
-    }
-  }
 }
 
 # Creates one or more GuardDuty filters for this account if the filter var is not empty.
@@ -134,17 +110,18 @@ resource "aws_guardduty_malware_protection_plan" "this" {
 
 # Creates one or more GuardDuty Detector Features
 resource "aws_guardduty_detector_feature" "this" {
-  for_each = { for feature in var.detector_features : feature.name => feature }
+  for_each = { for name, feature in var.detector_features : name => feature if !feature.exclude }
 
   detector_id = aws_guardduty_detector.this.id
-  name        = each.value.name
+  name        = each.key
+  region      = each.value.region
   status      = each.value.status
 
   dynamic "additional_configuration" {
-    for_each = each.value.additional_configuration != null ? [each.value.additional_configuration] : []
+    for_each = try(each.value.additional_configuration, {})
 
     content {
-      name   = additional_configuration.value.name
+      name   = additional_configuration.key
       status = additional_configuration.value.status
     }
   }
