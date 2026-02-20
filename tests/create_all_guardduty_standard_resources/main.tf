@@ -10,9 +10,6 @@ module "guardduty_standard_resources" {
   source = "../../"
 
   enable                       = true
-  enable_s3_protection         = true
-  enable_kubernetes_protection = true
-  enable_malware_protection    = true
   finding_publishing_frequency = "SIX_HOURS"
 
   filters = [
@@ -39,7 +36,7 @@ module "guardduty_standard_resources" {
     {
       name        = "Filter2"
       description = "My Filter 2"
-      rank        = 1
+      rank        = 2
       action      = "ARCHIVE"
       tags = {
         environment = "testing"
@@ -138,22 +135,24 @@ module "guardduty_standard_resources" {
     }
   }
 
-  detector_features = [
-    {
-      name   = "LAMBDA_NETWORK_LOGS"
-      status = "ENABLED"
-      region = data.aws_region.current.region
-    },
-    {
-      name   = "EKS_RUNTIME_MONITORING"
-      status = "ENABLED"
-      region = data.aws_region.current.region
+  detector_features = {
+    RUNTIME_MONITORING = {
+      exclude = false
+      status  = "ENABLED"
+      region  = data.aws_region.current.region
       additional_configuration = {
-        name   = "EKS_ADDON_MANAGEMENT"
-        status = "ENABLED"
+        EKS_ADDON_MANAGEMENT = {
+          status = "ENABLED"
+        }
+        ECS_FARGATE_AGENT_MANAGEMENT = {
+          status = "ENABLED"
+        }
+        EC2_AGENT_MANAGEMENT = {
+          status = "ENABLED"
+        }
       }
-    },
-  ]
+    }
+  }
 }
 
 data "aws_iam_policy_document" "bucket_pol" {

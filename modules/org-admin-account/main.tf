@@ -16,28 +16,4 @@ resource "aws_guardduty_organization_admin_account" "this" {
 resource "aws_guardduty_organization_configuration" "this" {
   auto_enable = true
   detector_id = var.delegated_administrator_account_detecter_id
-
-  datasources {
-    s3_logs {
-      auto_enable = var.auto_enable_s3_protection
-    }
-
-    kubernetes {
-      audit_logs {
-        enable = var.enable_kubernetes_protection
-      }
-    }
-
-    dynamic "malware_protection" {
-      for_each = var.auto_enable_malware_protection != null ? ["one"] : []
-
-      content {
-        scan_ec2_instance_with_findings {
-          ebs_volumes {
-            enable = var.auto_enable_malware_protection
-          }
-        }
-      }
-    }
-  }
 }
