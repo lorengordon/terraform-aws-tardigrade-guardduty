@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [6.0.0](https://github.com/plus3it/terraform-aws-tardigrade-guardduty/releases/tag/6.0.0)
+
+**Released**: 2026.02.20
+
+**Summary**:
+
+*   Refactors `detector_features` to fully manage all detector features. The input
+    structure is a backwards-incompatible manner. See the `tests/` for examples
+    on usage
+*   Removes inputs related to deprecated `datasources` attribute
+*   Addresses deprecation warning for aws_guardduty_detector `datasources` attribute
+
 ### [5.0.0](https://github.com/plus3it/terraform-aws-tardigrade-guardduty/releases/tag/5.0.0)
 
 **Released**: 2025.12.30
@@ -11,7 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 *   Bumps min AWS Provider version to v6
-*   Addresses deprecation warning for aws_region "name" attribute
+*   Addresses deprecation warning for aws_region `name` attribute
 
 ### 4.0.0
 
